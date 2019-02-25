@@ -38,6 +38,11 @@
     NSDateComponents *fromDateComponent = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:fromDate];
     
     self.isSameMonth = (fromDateComponent.month == modelDateComponent.month && fromDateComponent.year == modelDateComponent.year);
+    self.isToday = NO;
+}
+
+- (BOOL)isSameDate:(YLCalendarModel *)comparedModel {
+    return self.day == comparedModel.day && self.month == comparedModel.month && self.year == comparedModel.year;
 }
 
 @end

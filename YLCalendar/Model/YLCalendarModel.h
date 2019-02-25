@@ -18,9 +18,12 @@
 @property(nonatomic, assign)NSInteger month;
 @property(nonatomic, assign)NSInteger day;
 @property(nonatomic, assign)BOOL isSameMonth;
+@property(nonatomic, assign)BOOL isToday;
 
 - (instancetype)initWithDate:(NSDate *)modelDate;
 - (instancetype)initWithDate:(NSDate *)modelDate fromDate:(NSDate *)fromDate;
+
+- (BOOL)isSameDate:(YLCalendarModel *)comparedModel;
 
 @end
 

@@ -13,4 +13,6 @@
 
 + (UIImage *)lineImageWithKey:(NSString *)key frame:(CGRect)frame color:(UIColor *)color;
 
++ (UIImage *)circleImageWithKey:(NSString *)key frame:(CGRect)frame color:(UIColor *)color;
+
 @end

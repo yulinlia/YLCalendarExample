@@ -115,6 +115,7 @@
         for (int i = 0; i < totalWeeks * 7; i++) {
             NSDate *modelDate = [self.calendar dateByOffset:i ofDate:monthDate];
             YLCalendarModel *model = [[YLCalendarModel alloc] initWithDate:modelDate fromDate:monthDate];
+            model.isToday = [model isSameDate:self.todayModel];
             [arr addObject:model];
         }
         
