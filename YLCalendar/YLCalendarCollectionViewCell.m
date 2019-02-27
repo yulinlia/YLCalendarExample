@@ -58,6 +58,13 @@
 
 - (void)setModel:(YLCalendarModel *)model isCenter:(BOOL)isCenter {
     self.model = model;
+    if (isCenter) {
+        self.dateLabel.textColor = [UIColor blackColor];
+    }
+    else {
+        self.dateLabel.textColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
+    }
+    
     [self setNeedsDisplay];
 }
 

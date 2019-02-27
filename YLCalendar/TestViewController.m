@@ -35,7 +35,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.centerSection = 0;
     self.dataSource = [NSMutableDictionary dictionary];
     self.sections = [NSMutableArray array];
     
@@ -64,6 +63,7 @@
 }
 
 - (void)initializeDateInfo {
+    self.centerSection = 6;
     NSDate *now = [NSDate date];
     _todayModel = [[YLCalendarModel alloc] initWithDate:now];
     
@@ -76,18 +76,25 @@
     self.title =self.sections[self.centerSection];
 }
 
-- (NSInteger)getSectionNumOfScreenCenter {
+- (void)updateSectionNumOfScreenCenter {
     CGPoint centerPoint = CGPointMake(self.collectionView.center.x + self.collectionView.contentOffset.x, self.collectionView.center.y + self.collectionView.contentOffset.y);
     
     NSIndexPath *centerIndexPath = [self.collectionView indexPathForItemAtPoint:centerPoint];
-    if (centerIndexPath.section == 0)
-        return 0;
+    if (centerIndexPath.section == 0 && centerIndexPath.row == 0)
+        return;
     
-    NSLog(@"%ld", centerIndexPath.section);
+    if (centerIndexPath.section == self.centerSection)
+        return ;
+    
+    NSMutableIndexSet *indexSets = [NSMutableIndexSet indexSet];
+    [indexSets addIndex:self.centerSection];
+    [indexSets addIndex:centerIndexPath.section];
+    
     self.centerSection = centerIndexPath.section;
-    self.title =self.sections[centerIndexPath.section];
     
-    return centerIndexPath.section;
+    [self.collectionView reloadSections:indexSets];
+    
+    self.title = self.sections[centerIndexPath.section];
 }
 
 - (void)reloadDataSource {
@@ -148,7 +155,7 @@
     }
     
     [self reloadDataSource];
-    [self reloadDate];
+    [self reloadData];
     
     //since the layout may not be update immediately, so we call function [cvLayout invalidateLayout] to modify the layout immediately.
     [cvLayout invalidateLayout];
@@ -162,7 +169,7 @@
     [self.collectionView setContentOffset:CGPointMake(self.collectionView.contentOffset.x, self.collectionView.contentOffset.y + scrollOffset)];
 }
 
-- (void)reloadDate {
+- (void)reloadData {
     [self.collectionView reloadData];
 }
 
@@ -230,7 +237,7 @@
     NSString *monthStr = [self.sections objectAtIndex:indexPath.section];
     YLCalendarModel *model = [[self.dataSource objectForKey:monthStr] objectAtIndex:indexPath.row];
     
-    [cell setModel:model isCenter:YES];
+    [cell setModel:model isCenter:indexPath.section == self.centerSection];
     
     return cell;
 }
@@ -240,7 +247,7 @@
         YLCalendarHeaderView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:HEADERID forIndexPath:indexPath];
         
         NSString *monthStr = [self.sections objectAtIndex:indexPath.section];
-        [headerView setModel:monthStr];
+        [headerView setModel:monthStr isCenter:self.centerSection == indexPath.section];
         
         return headerView;
     }
@@ -261,9 +268,9 @@
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (scrollView == self.collectionView) {
-        [self getSectionNumOfScreenCenter];
         UICollectionView *contentView = (UICollectionView *)scrollView;
         
+        [self updateSectionNumOfScreenCenter];
         CGFloat contentHeight = contentView.contentSize.height;
         CGFloat contentOffsetY = contentView.contentOffset.y;
         CGFloat visibleViewHeight = contentView.bounds.size.height;
@@ -275,6 +282,8 @@
         else if (contentHeight - contentOffsetY < visibleViewHeight) {
             [self appendDate:NO];
         }
+        
+        
     }
 }
 

@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, strong)UILabel *headerLabel;
 
-- (void)setModel:(NSString *)text;
+- (void)setModel:(NSString *)text isCenter:(BOOL)isCenter;
 
 @end
 
