@@ -1,27 +1,26 @@
 //
-//  TestViewController.m
+//  YLCalendarView.m
 //  YLCalendar
 //
-//  Created by 梁煜麟 on 2/15/19.
+//  Created by 梁煜麟 on 2/28/19.
 //  Copyright © 2019 梁煜麟. All rights reserved.
 //
 
-#import "TestViewController.h"
-#import "NSCalendar+Util.h"
+#import "YLCalendarView.h"
 #import "YLCalendarModel.h"
+#import "NSCalendar+Util.h"
 #import "YLCalendarHeaderView.h"
 #import "YLCalendarCollectionViewCell.h"
-#import "ComponentViewController.h"
 
-#define CELLID @"cellID"
-#define HEADERID @"headerID"
+#define YLCALENDAR_CELL_ID @"YLCalendar_cell"
+#define YLCALENDAR_HEADER_ID @"YLCalendar_header"
 #define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
 
-@interface TestViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@interface YLCalendarView ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
-@property(nonatomic, strong)UICollectionView *collectionView;
+@property(nonatomic, strong) UICollectionView *collectionView;
 @property(nonatomic, strong)NSCalendar *calendar;
-@property(nonatomic, strong)NSMutableDictionary *dataSource;
+@property(nonatomic, strong)NSMutableDictionary *dataSourceDic;
 @property(nonatomic, strong)NSMutableArray *sections;
 
 @property(nonatomic, strong)YLCalendarModel *startDateModel;
@@ -34,43 +33,33 @@
 
 @end
 
-@implementation TestViewController
+@implementation YLCalendarView
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    
-    UIBarButtonItem *rightBtn = [[UIBarButtonItem alloc] initWithTitle:@"jump" style:UIBarButtonItemStylePlain target:self action:@selector(onJumpToComponent)];
-    self.navigationItem.rightBarButtonItem = rightBtn;
-
-    self.dataSource = [NSMutableDictionary dictionary];
-    self.sections = [NSMutableArray array];
-    
-    // Do any additional setup after loading the view.
-    _calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    _calendar.locale = [NSLocale currentLocale];
-
-    
-    [self initializeDateInfo];
-    
-    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-    layout.minimumLineSpacing = 0;
-    layout.minimumInteritemSpacing = 0;
-    _collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
-    _collectionView.showsVerticalScrollIndicator = NO;
-    _collectionView.backgroundColor = [UIColor whiteColor];
-    _collectionView.delegate = self;
-    _collectionView.dataSource = self;
-    [_collectionView registerClass:[YLCalendarHeaderView class]
-        forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:HEADERID];
-    [_collectionView registerClass:[YLCalendarCollectionViewCell class] forCellWithReuseIdentifier:CELLID];
-    [self.view addSubview:_collectionView];
-    
-    [self.view setBackgroundColor:[UIColor blueColor]];
-    [self scrollToToday];
+- (instancetype)initWithFrame:(CGRect)frame {
+    return [self initWithFrame:frame collectionViewLayout:nil];
 }
 
-- (void)initializeDateInfo {
-    self.centerSection = 6;
+- (instancetype)initWithFrame:(CGRect)frame collectionViewLayout:(UICollectionViewLayout *)layout {
+    if (self = [super initWithFrame:frame]) {
+        [self commonInitializer:layout];
+    }
+    
+    return self;
+}
+
+- (void)commonInitializer:(UICollectionViewLayout *)layout {
+    [self initializeCalendarCollectionView:layout];
+    [self initializeCalendarDataSource];
+}
+
+- (void)initializeCalendarDataSource {
+    _calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    _calendar.locale = [NSLocale currentLocale];
+    
+    _sections = [NSMutableArray array];
+    _dataSourceDic = [NSMutableDictionary dictionary];
+    
+    _centerSection = 6;
     NSDate *now = [NSDate date];
     _todayModel = [[YLCalendarModel alloc] initWithDate:now];
     
@@ -80,28 +69,29 @@
     NSDate *endDate = [self.calendar dateWithOffset:6 fromDate:now withUnit:YLCalendarUnitMonth];
     _endDateModel = [[YLCalendarModel alloc] initWithDate:endDate];
     [self reloadDataSource];
-    self.title =self.sections[self.centerSection];
+    
+    [self scrollToToday];
 }
 
-- (void)highlightCenteredMonth {
-    CGPoint centerPoint = CGPointMake(self.collectionView.center.x + self.collectionView.contentOffset.x, self.collectionView.center.y + self.collectionView.contentOffset.y);
+- (void)initializeCalendarCollectionView: (UICollectionViewLayout *)layout {
+    if (!layout) {
+        UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
+        flowLayout.minimumLineSpacing = 0;
+        flowLayout.minimumInteritemSpacing = 0;
+        _collectionView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:flowLayout];
+    }
+    else {
+        _collectionView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:layout];
+    }
     
-    NSIndexPath *centerIndexPath = [self.collectionView indexPathForItemAtPoint:centerPoint];
-    if (centerIndexPath.section == 0 && centerIndexPath.row == 0)
-        return;
-    
-    if (centerIndexPath.section == self.centerSection)
-        return ;
-    
-    NSMutableIndexSet *indexSets = [NSMutableIndexSet indexSet];
-    [indexSets addIndex:self.centerSection];
-    [indexSets addIndex:centerIndexPath.section];
-    
-    self.centerSection = centerIndexPath.section;
-    
-    [self.collectionView reloadSections:indexSets];
-    
-    self.title = self.sections[centerIndexPath.section];
+    _collectionView.showsVerticalScrollIndicator = NO;
+    _collectionView.backgroundColor = [UIColor whiteColor];
+    _collectionView.delegate = self;
+    _collectionView.dataSource = self;
+    [_collectionView registerClass:[YLCalendarHeaderView class]
+        forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:YLCALENDAR_HEADER_ID];
+    [_collectionView registerClass:[YLCalendarCollectionViewCell class] forCellWithReuseIdentifier:YLCALENDAR_CELL_ID];
+    [self addSubview:_collectionView];
 }
 
 - (void)reloadDataSource {
@@ -120,7 +110,7 @@
         [self.sections addObject:monthStr];
         
         //prepare the model of each items for each section
-        if ([self.dataSource objectForKey:monthStr])
+        if ([self.dataSourceDic objectForKey:monthStr])
             continue;
         
         int totalWeeks = (int)[self.calendar numberOfWeeksInMonth:monthDate];
@@ -133,7 +123,7 @@
             [arr addObject:model];
         }
         
-        [self.dataSource setValue:arr forKey:monthStr];
+        [self.dataSourceDic setValue:arr forKey:monthStr];
     }
 }
 
@@ -150,7 +140,7 @@
     NSInteger fromSection = fromIndexPath.section;
     NSDate *fromDate = [self firstDayInSection:fromSection];
     UICollectionViewLayoutAttributes *fromAttrs = [self.collectionView.collectionViewLayout layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:fromSection]];
-    CGPoint fromSectionOrigin = [self.view convertPoint:fromAttrs.frame.origin fromView:self.collectionView];
+    CGPoint fromSectionOrigin = [self convertPoint:fromAttrs.frame.origin fromView:self.collectionView];
     
     if (isFromTop) {
         NSDate *updatedStartDate = [self.calendar dateWithOffset:-6 fromDate:self.startDateModel.date withUnit:YLCalendarUnitMonth];
@@ -170,7 +160,7 @@
     
     NSInteger toSection = [self.calendar distanceFromDate:[_calendar firstDayInMonth:self.startDateModel.date] toDate:fromDate withUnit:YLCalendarUnitMonth];
     UICollectionViewLayoutAttributes *toAttrs = [cvLayout layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:toSection]];
-    CGPoint toSectionOrigin = [self.view convertPoint:toAttrs.frame.origin fromView:cv];
+    CGPoint toSectionOrigin = [self convertPoint:toAttrs.frame.origin fromView:cv];
     
     CGFloat scrollOffset = toSectionOrigin.y - fromSectionOrigin.y;
     [self.collectionView setContentOffset:CGPointMake(self.collectionView.contentOffset.x, self.collectionView.contentOffset.y + scrollOffset)];
@@ -180,54 +170,6 @@
     [self.collectionView reloadData];
 }
 
-- (NSDate *)firstDayInSection:(NSInteger)section {
-    NSDateComponents *components = [self.calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:self.startDateModel.date];
-    components.day = 1;
-    components.month = self.startDateModel.month + section;
-    return [self.calendar dateFromComponents:components];
-}
-
-- (NSIndexPath *)indexPathForToday {
-    NSInteger sectionIndex = [self.calendar distanceFromDate:self.startDateModel.date toDate:self.todayModel.date withUnit:YLCalendarUnitMonth];
-    NSMutableArray *arr = [self.dataSource objectForKey:[self.sections objectAtIndex:sectionIndex]];
-    for (int i = 0; i < arr.count; i++) {
-        YLCalendarModel *model = [arr objectAtIndex:i];
-        if (model.day == self.todayModel.day && model.month == self.todayModel.month && model.year == self.todayModel.year)
-            return [NSIndexPath indexPathForRow:i inSection:sectionIndex];
-    }
-    
-    return [NSIndexPath indexPathForRow:0 inSection:0];
-}
-
-- (void)scrollToToday {
-    NSIndexPath *todayIndexPath = [self indexPathForToday];
-    
-    CGRect dateItemRect = [self frameForItemAtIndexPath:todayIndexPath];
-    CGRect monthSectionHeaderRect = [self frameForHeaderForSection:todayIndexPath.section];
-    
-    CGFloat delta = CGRectGetMaxY(dateItemRect) - CGRectGetMinY(monthSectionHeaderRect);
-    CGFloat actualViewHeight = CGRectGetHeight(self.collectionView.frame) - self.collectionView.contentInset.top - self.collectionView.contentInset.bottom;
-    
-    CGRect headerRect = [self frameForHeaderForSection:todayIndexPath.section];
-    CGPoint topOfHeader = CGPointMake(0, headerRect.origin.y - _collectionView.contentInset.top);
-    [_collectionView setContentOffset:topOfHeader animated:NO];
-}
-
-- (CGRect)frameForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    UICollectionViewLayoutAttributes *attributes = [self.collectionView layoutAttributesForItemAtIndexPath:indexPath];
-    
-    return attributes.frame;
-}
-
-- (CGRect)frameForHeaderForSection:(NSInteger)section
-{
-    NSIndexPath *indexPath = [NSIndexPath indexPathForItem:0 inSection:section];
-    UICollectionViewLayoutAttributes *attributes = [self.collectionView layoutAttributesForSupplementaryElementOfKind:UICollectionElementKindSectionHeader atIndexPath:indexPath];
-    
-    return attributes.frame;
-}
-
 #pragma mark - UICollectionViewDataSource
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     return [self.sections count];
@@ -235,14 +177,14 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     NSString *monthStr = [self.sections objectAtIndex:section];
-    return [[self.dataSource objectForKey:monthStr] count];
+    return [[self.dataSourceDic objectForKey:monthStr] count];
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    YLCalendarCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CELLID forIndexPath:indexPath];
+    YLCalendarCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:YLCALENDAR_CELL_ID forIndexPath:indexPath];
     
     NSString *monthStr = [self.sections objectAtIndex:indexPath.section];
-    YLCalendarModel *model = [[self.dataSource objectForKey:monthStr] objectAtIndex:indexPath.row];
+    YLCalendarModel *model = [[self.dataSourceDic objectForKey:monthStr] objectAtIndex:indexPath.row];
     
     [cell setModel:model isCenter:indexPath.section == self.centerSection];
     
@@ -251,7 +193,7 @@
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
     if ([kind isEqualToString:UICollectionElementKindSectionHeader]) {
-        YLCalendarHeaderView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:HEADERID forIndexPath:indexPath];
+        YLCalendarHeaderView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:YLCALENDAR_HEADER_ID forIndexPath:indexPath];
         
         NSString *monthStr = [self.sections objectAtIndex:indexPath.section];
         [headerView setModel:monthStr isCenter:self.centerSection == indexPath.section];
@@ -303,7 +245,7 @@
             self.lastOffsetPoint = scrollView.contentOffset;
             self.lastOffsetCapture = [NSDate timeIntervalSinceReferenceDate];
         }
-
+        
     }
 }
 
@@ -312,11 +254,73 @@
     self.lastOffsetCapture = [NSDate timeIntervalSinceReferenceDate];
 }
 
-
-
-- (void)onJumpToComponent {
-    ComponentViewController *vc = [[ComponentViewController alloc] init];
-    [self.navigationController pushViewController:vc animated:YES];
+- (void)highlightCenteredMonth {
+    CGPoint centerPoint = CGPointMake(self.collectionView.center.x + self.collectionView.contentOffset.x, self.collectionView.center.y + self.collectionView.contentOffset.y);
+    
+    NSIndexPath *centerIndexPath = [self.collectionView indexPathForItemAtPoint:centerPoint];
+    if (centerIndexPath.section == 0 && centerIndexPath.row == 0)
+        return;
+    
+    if (centerIndexPath.section == self.centerSection)
+        return ;
+    
+    NSMutableIndexSet *indexSets = [NSMutableIndexSet indexSet];
+    [indexSets addIndex:self.centerSection];
+    [indexSets addIndex:centerIndexPath.section];
+    
+    self.centerSection = centerIndexPath.section;
+    
+    [self.collectionView reloadSections:indexSets];
 }
+
+#pragma mark - Helper Functions
+- (NSDate *)firstDayInSection:(NSInteger)section {
+    NSDateComponents *components = [self.calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:self.startDateModel.date];
+    components.day = 1;
+    components.month = self.startDateModel.month + section;
+    return [self.calendar dateFromComponents:components];
+}
+
+- (NSIndexPath *)indexPathForToday {
+    NSInteger sectionIndex = [self.calendar distanceFromDate:self.startDateModel.date toDate:self.todayModel.date withUnit:YLCalendarUnitMonth];
+    NSMutableArray *arr = [self.dataSourceDic objectForKey:[self.sections objectAtIndex:sectionIndex]];
+    for (int i = 0; i < arr.count; i++) {
+        YLCalendarModel *model = [arr objectAtIndex:i];
+        if (model.day == self.todayModel.day && model.month == self.todayModel.month && model.year == self.todayModel.year)
+            return [NSIndexPath indexPathForRow:i inSection:sectionIndex];
+    }
+    
+    return [NSIndexPath indexPathForRow:0 inSection:0];
+}
+
+- (void)scrollToToday {
+    NSIndexPath *todayIndexPath = [self indexPathForToday];
+    
+    CGRect dateItemRect = [self frameForItemAtIndexPath:todayIndexPath];
+    CGRect monthSectionHeaderRect = [self frameForHeaderForSection:todayIndexPath.section];
+    
+    CGFloat delta = CGRectGetMaxY(dateItemRect) - CGRectGetMinY(monthSectionHeaderRect);
+    CGFloat actualViewHeight = CGRectGetHeight(self.collectionView.frame) - self.collectionView.contentInset.top - self.collectionView.contentInset.bottom;
+    
+    CGRect headerRect = [self frameForHeaderForSection:todayIndexPath.section];
+    CGPoint topOfHeader = CGPointMake(0, headerRect.origin.y - _collectionView.contentInset.top);
+    [_collectionView setContentOffset:topOfHeader animated:NO];
+}
+
+- (CGRect)frameForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    UICollectionViewLayoutAttributes *attributes = [self.collectionView layoutAttributesForItemAtIndexPath:indexPath];
+    
+    return attributes.frame;
+}
+
+- (CGRect)frameForHeaderForSection:(NSInteger)section
+{
+    NSIndexPath *indexPath = [NSIndexPath indexPathForItem:0 inSection:section];
+    UICollectionViewLayoutAttributes *attributes = [self.collectionView layoutAttributesForSupplementaryElementOfKind:UICollectionElementKindSectionHeader atIndexPath:indexPath];
+    
+    return attributes.frame;
+}
+
 
 @end

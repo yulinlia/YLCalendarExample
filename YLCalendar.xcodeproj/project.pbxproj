@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		623D7EDE2227596B008C00EC /* ComponentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 623D7EDD2227596B008C00EC /* ComponentViewController.m */; };
+		624142BC222871CD009AEE88 /* YLCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 624142BA22286FC1009AEE88 /* YLCalendarView.m */; };
 		625430A622248A80009F2CE6 /* YLCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 625430A522248A80009F2CE6 /* YLCache.m */; };
 		625430A822248EBC009F2CE6 /* UIImage+YLUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 625430A722248EBC009F2CE6 /* UIImage+YLUtil.m */; };
 		62690E572217520D005DAC91 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 62690E562217520D005DAC91 /* AppDelegate.m */; };
@@ -21,6 +23,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		623D7EDC2227596B008C00EC /* ComponentViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ComponentViewController.h; sourceTree = "<group>"; };
+		623D7EDD2227596B008C00EC /* ComponentViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ComponentViewController.m; sourceTree = "<group>"; };
+		624142B922286FC1009AEE88 /* YLCalendarView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YLCalendarView.h; sourceTree = "<group>"; };
+		624142BA22286FC1009AEE88 /* YLCalendarView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YLCalendarView.m; sourceTree = "<group>"; };
 		625430A422248A72009F2CE6 /* YLCache.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YLCache.h; sourceTree = "<group>"; };
 		625430A522248A80009F2CE6 /* YLCache.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YLCache.m; sourceTree = "<group>"; };
 		625430A722248EBC009F2CE6 /* UIImage+YLUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIImage+YLUtil.m"; sourceTree = "<group>"; };
@@ -55,6 +61,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		623D7EDB22275935008C00EC /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				624142B922286FC1009AEE88 /* YLCalendarView.h */,
+				624142BA22286FC1009AEE88 /* YLCalendarView.m */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		62690E492217520D005DAC91 = {
 			isa = PBXGroup;
 			children = (
@@ -74,6 +89,7 @@
 		62690E542217520D005DAC91 /* YLCalendar */ = {
 			isa = PBXGroup;
 			children = (
+				623D7EDB22275935008C00EC /* Views */,
 				62690E7822176AF6005DAC91 /* Model */,
 				62690E6E221752D6005DAC91 /* Util */,
 				62690E552217520D005DAC91 /* AppDelegate.h */,
@@ -88,6 +104,8 @@
 				62690E7622176013005DAC91 /* YLCalendarCollectionViewCell.m */,
 				62690E7C22189630005DAC91 /* YLCalendarHeaderView.h */,
 				62690E7D22189630005DAC91 /* YLCalendarHeaderView.m */,
+				623D7EDC2227596B008C00EC /* ComponentViewController.h */,
+				623D7EDD2227596B008C00EC /* ComponentViewController.m */,
 			);
 			path = YLCalendar;
 			sourceTree = "<group>";
@@ -185,10 +203,12 @@
 			files = (
 				62690E7B22176B14005DAC91 /* YLCalendarModel.m in Sources */,
 				62690E7422175448005DAC91 /* NSCalendar+Util.m in Sources */,
+				624142BC222871CD009AEE88 /* YLCalendarView.m in Sources */,
 				62690E7E22189630005DAC91 /* YLCalendarHeaderView.m in Sources */,
 				62690E6D22175263005DAC91 /* TestViewController.m in Sources */,
 				625430A822248EBC009F2CE6 /* UIImage+YLUtil.m in Sources */,
 				62690E7722176013005DAC91 /* YLCalendarCollectionViewCell.m in Sources */,
+				623D7EDE2227596B008C00EC /* ComponentViewController.m in Sources */,
 				625430A622248A80009F2CE6 /* YLCache.m in Sources */,
 				62690E6522175210005DAC91 /* main.m in Sources */,
 				62690E572217520D005DAC91 /* AppDelegate.m in Sources */,
