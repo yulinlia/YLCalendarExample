@@ -7,11 +7,11 @@
 //
 
 #import "ComponentViewController.h"
-#import "YLCalendarView.h"
+#import "YLCalendarCustomView.h"
 
 @interface ComponentViewController ()
 
-@property(nonatomic, strong) YLCalendarView *calendarView;
+@property(nonatomic, strong) YLCalendarCustomView *calendarView;
 
 @end
 
@@ -19,8 +19,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    self.calendarView = [[YLCalendarView alloc] initWithFrame:self.view.frame];
+    self.view.backgroundColor = [UIColor whiteColor];
+    self.calendarView = [[YLCalendarCustomView alloc] initWithFrame:self.view.frame];
     [self.view addSubview:self.calendarView];
 }
 

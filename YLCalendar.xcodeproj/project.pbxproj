@@ -20,6 +20,8 @@
 		62690E7722176013005DAC91 /* YLCalendarCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 62690E7622176013005DAC91 /* YLCalendarCollectionViewCell.m */; };
 		62690E7B22176B14005DAC91 /* YLCalendarModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 62690E7A22176B14005DAC91 /* YLCalendarModel.m */; };
 		62690E7E22189630005DAC91 /* YLCalendarHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 62690E7D22189630005DAC91 /* YLCalendarHeaderView.m */; };
+		62D9103B2232F89D0032E6EE /* YLCalendarSampleCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 62D9103A2232F89D0032E6EE /* YLCalendarSampleCollectionViewCell.m */; };
+		62D9103E2232FA940032E6EE /* YLCalendarCustomView.m in Sources */ = {isa = PBXBuildFile; fileRef = 62D9103D2232FA940032E6EE /* YLCalendarCustomView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +50,10 @@
 		62690E7A22176B14005DAC91 /* YLCalendarModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YLCalendarModel.m; sourceTree = "<group>"; };
 		62690E7C22189630005DAC91 /* YLCalendarHeaderView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YLCalendarHeaderView.h; sourceTree = "<group>"; };
 		62690E7D22189630005DAC91 /* YLCalendarHeaderView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YLCalendarHeaderView.m; sourceTree = "<group>"; };
+		62D910392232F89D0032E6EE /* YLCalendarSampleCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YLCalendarSampleCollectionViewCell.h; sourceTree = "<group>"; };
+		62D9103A2232F89D0032E6EE /* YLCalendarSampleCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YLCalendarSampleCollectionViewCell.m; sourceTree = "<group>"; };
+		62D9103C2232FA940032E6EE /* YLCalendarCustomView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YLCalendarCustomView.h; sourceTree = "<group>"; };
+		62D9103D2232FA940032E6EE /* YLCalendarCustomView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YLCalendarCustomView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,6 +136,7 @@
 		62D910372232F4970032E6EE /* Example */ = {
 			isa = PBXGroup;
 			children = (
+				62D910382232F5A20032E6EE /* Views */,
 				62690E552217520D005DAC91 /* AppDelegate.h */,
 				62690E562217520D005DAC91 /* AppDelegate.m */,
 				623D7EDC2227596B008C00EC /* ComponentViewController.h */,
@@ -138,6 +145,17 @@
 				62690E6C22175263005DAC91 /* TestViewController.m */,
 			);
 			path = Example;
+			sourceTree = "<group>";
+		};
+		62D910382232F5A20032E6EE /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				62D910392232F89D0032E6EE /* YLCalendarSampleCollectionViewCell.h */,
+				62D9103A2232F89D0032E6EE /* YLCalendarSampleCollectionViewCell.m */,
+				62D9103C2232FA940032E6EE /* YLCalendarCustomView.h */,
+				62D9103D2232FA940032E6EE /* YLCalendarCustomView.m */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -215,7 +233,9 @@
 				62690E7E22189630005DAC91 /* YLCalendarHeaderView.m in Sources */,
 				62690E6D22175263005DAC91 /* TestViewController.m in Sources */,
 				625430A822248EBC009F2CE6 /* UIImage+YLUtil.m in Sources */,
+				62D9103E2232FA940032E6EE /* YLCalendarCustomView.m in Sources */,
 				62690E7722176013005DAC91 /* YLCalendarCollectionViewCell.m in Sources */,
+				62D9103B2232F89D0032E6EE /* YLCalendarSampleCollectionViewCell.m in Sources */,
 				623D7EDE2227596B008C00EC /* ComponentViewController.m in Sources */,
 				625430A622248A80009F2CE6 /* YLCache.m in Sources */,
 				62690E6522175210005DAC91 /* main.m in Sources */,

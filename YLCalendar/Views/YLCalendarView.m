@@ -90,7 +90,7 @@
     _collectionView.dataSource = self;
     [_collectionView registerClass:[YLCalendarHeaderView class]
         forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:YLCALENDAR_HEADER_ID];
-    [_collectionView registerClass:[YLCalendarCollectionViewCell class] forCellWithReuseIdentifier:YLCALENDAR_CELL_ID];
+    [_collectionView registerClass:[self dateViewCellClass] forCellWithReuseIdentifier:YLCALENDAR_CELL_ID];
     [self addSubview:_collectionView];
 }
 
@@ -325,5 +325,9 @@
     return attributes.frame;
 }
 
+#pragma mark - customize calendar views
+- (Class)dateViewCellClass {
+    return [YLCalendarCollectionViewCell class];
+}
 
 @end
