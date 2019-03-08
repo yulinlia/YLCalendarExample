@@ -18,7 +18,7 @@
 
 @interface YLCalendarView ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
-@property(nonatomic, strong) UICollectionView *collectionView;
+@property(nonatomic, strong)UICollectionView *collectionView;
 @property(nonatomic, strong)NSCalendar *calendar;
 @property(nonatomic, strong)NSMutableDictionary *dataSourceDic;
 @property(nonatomic, strong)NSMutableArray *sections;
@@ -258,8 +258,11 @@
     CGPoint centerPoint = CGPointMake(self.collectionView.center.x + self.collectionView.contentOffset.x, self.collectionView.center.y + self.collectionView.contentOffset.y);
     
     NSIndexPath *centerIndexPath = [self.collectionView indexPathForItemAtPoint:centerPoint];
-    if (centerIndexPath.section == 0 && centerIndexPath.row == 0)
-        return;
+    if (centerIndexPath.section == 0 && centerIndexPath.row == 0) {
+        CGRect headerFrame = [self frameForHeaderForSection:0];
+        centerPoint.y = centerPoint.y + headerFrame.size.height;
+        centerIndexPath = [self.collectionView indexPathForItemAtPoint:centerPoint];
+    }
     
     if (centerIndexPath.section == self.centerSection)
         return ;
