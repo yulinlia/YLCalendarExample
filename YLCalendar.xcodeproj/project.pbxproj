@@ -73,6 +73,7 @@
 		62690E492217520D005DAC91 = {
 			isa = PBXGroup;
 			children = (
+				62D910372232F4970032E6EE /* Example */,
 				62690E542217520D005DAC91 /* YLCalendar */,
 				62690E532217520D005DAC91 /* Products */,
 			);
@@ -89,23 +90,17 @@
 		62690E542217520D005DAC91 /* YLCalendar */ = {
 			isa = PBXGroup;
 			children = (
+				62690E5E22175210005DAC91 /* Assets.xcassets */,
 				623D7EDB22275935008C00EC /* Views */,
 				62690E7822176AF6005DAC91 /* Model */,
 				62690E6E221752D6005DAC91 /* Util */,
-				62690E552217520D005DAC91 /* AppDelegate.h */,
-				62690E562217520D005DAC91 /* AppDelegate.m */,
-				62690E5E22175210005DAC91 /* Assets.xcassets */,
 				62690E6022175210005DAC91 /* LaunchScreen.storyboard */,
 				62690E6322175210005DAC91 /* Info.plist */,
 				62690E6422175210005DAC91 /* main.m */,
-				62690E6B22175263005DAC91 /* TestViewController.h */,
-				62690E6C22175263005DAC91 /* TestViewController.m */,
 				62690E7522176013005DAC91 /* YLCalendarCollectionViewCell.h */,
 				62690E7622176013005DAC91 /* YLCalendarCollectionViewCell.m */,
 				62690E7C22189630005DAC91 /* YLCalendarHeaderView.h */,
 				62690E7D22189630005DAC91 /* YLCalendarHeaderView.m */,
-				623D7EDC2227596B008C00EC /* ComponentViewController.h */,
-				623D7EDD2227596B008C00EC /* ComponentViewController.m */,
 			);
 			path = YLCalendar;
 			sourceTree = "<group>";
@@ -130,6 +125,19 @@
 				62690E7A22176B14005DAC91 /* YLCalendarModel.m */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		62D910372232F4970032E6EE /* Example */ = {
+			isa = PBXGroup;
+			children = (
+				62690E552217520D005DAC91 /* AppDelegate.h */,
+				62690E562217520D005DAC91 /* AppDelegate.m */,
+				623D7EDC2227596B008C00EC /* ComponentViewController.h */,
+				623D7EDD2227596B008C00EC /* ComponentViewController.m */,
+				62690E6B22175263005DAC91 /* TestViewController.h */,
+				62690E6C22175263005DAC91 /* TestViewController.m */,
+			);
+			path = Example;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
